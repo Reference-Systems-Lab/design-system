@@ -21,7 +21,8 @@
     "library.json"
   ],
   "scripts": {
-    "lint": "prettier --check . --ignore-path ../../.gitignore --ignore-path ../../.prettierignore"
+    "lint": "prettier --check . --ignore-path ../../.gitignore --ignore-path ../../.prettierignore",
+    "check:package": "publint --strict --pack npm"
   },
   "peerDependencies": {
     "typescript": "~6.0.0"

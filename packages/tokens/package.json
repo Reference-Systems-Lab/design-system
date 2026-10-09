@@ -27,7 +27,8 @@
   "scripts": {
     "build": "tz build --config terrazzo.config.mjs && node scripts/emit.mjs",
     "test": "vitest run",
-    "lint": "eslint . && prettier --check . --ignore-path ../../.gitignore --ignore-path ../../.prettierignore"
+    "lint": "eslint . && prettier --check . --ignore-path ../../.gitignore --ignore-path ../../.prettierignore",
+    "check:package": "publint --strict --pack npm && attw --pack . --profile esm-only --exclude-entrypoints ./tokens.css"
   },
   "devDependencies": {
     "@terrazzo/cli": "2.7.1",
