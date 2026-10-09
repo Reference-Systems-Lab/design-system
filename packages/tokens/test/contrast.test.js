@@ -33,6 +33,9 @@ export const pairs = [
 describe.each(Object.keys(themes))("%s theme", (theme) => {
   it.each(pairs)("%s on %s reaches %s:1", (fg, bg, min) => {
     const r = ratio(themes[theme][fg], themes[theme][bg]);
-    expect(r, `${fg} on ${bg} in ${theme}: ${r.toFixed(2)}:1, needs ${min}:1`).toBeGreaterThanOrEqual(min);
+    expect(
+      r,
+      `${fg} on ${bg} in ${theme}: ${r.toFixed(2)}:1, needs ${min}:1`,
+    ).toBeGreaterThanOrEqual(min);
   });
 });

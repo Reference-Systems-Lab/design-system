@@ -1,0 +1,31 @@
+{
+  "name": "@reference-systems-lab/stylelint-config",
+  "version": "0.0.0",
+  "description": "The shared Stylelint config: standard rules for Vue, and colours only from tokens",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Reference-Systems-Lab/design-system.git",
+    "directory": "packages/stylelint-config"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js"
+  ],
+  "scripts": {
+    "lint": "eslint . && prettier --check . --ignore-path ../../.gitignore --ignore-path ../../.prettierignore"
+  },
+  "dependencies": {
+    "stylelint-config-standard-vue": "^2.0.0"
+  },
+  "peerDependencies": {
+    "stylelint": "^17.0.0"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
+}

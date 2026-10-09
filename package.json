@@ -18,10 +18,19 @@
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
     "check:package": "turbo run check:package",
-    "check": "turbo run build lint typecheck test check:package"
+    "check": "turbo run build lint typecheck test check:package",
+    "lint:root": "eslint *.js && prettier --check ."
   },
   "devDependencies": {
-    "turbo": "2.11.6"
+    "@reference-systems-lab/eslint-config": "*",
+    "@reference-systems-lab/prettier-config": "*",
+    "@reference-systems-lab/stylelint-config": "*",
+    "eslint": "10.11.0",
+    "prettier": "3.9.9",
+    "stylelint": "17.16.0",
+    "turbo": "2.11.6",
+    "typescript": "6.0.3"
   },
-  "allowScripts": {}
+  "allowScripts": {},
+  "prettier": "@reference-systems-lab/prettier-config"
 }

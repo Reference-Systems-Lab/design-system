@@ -41,7 +41,10 @@ export default defineConfig({
           include: themed,
           prepare: (body) =>
             `@media (prefers-color-scheme: dark) {\n${block(
-              [':root:not([data-theme="light"])', ':root:not([data-theme="light"]) .ds-theme-scope'],
+              [
+                ':root:not([data-theme="light"])',
+                ':root:not([data-theme="light"]) .ds-theme-scope',
+              ],
               "dark",
               body,
             )}}\n`,
@@ -49,7 +52,8 @@ export default defineConfig({
         {
           input: { theme: "dark" },
           include: themed,
-          prepare: (body) => block(['[data-theme="dark"]', '[data-theme="dark"] .ds-theme-scope'], "dark", body),
+          prepare: (body) =>
+            block(['[data-theme="dark"]', '[data-theme="dark"] .ds-theme-scope'], "dark", body),
         },
       ],
     }),
