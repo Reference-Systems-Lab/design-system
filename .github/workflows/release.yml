@@ -61,6 +61,7 @@ jobs:
         run: |
           mkdir -p packs
           for dir in packages/*/; do
+            [ -f "$dir/package.json" ] || continue
             name=$(node -p "require('./$dir/package.json').name")
             version=$(node -p "require('./$dir/package.json').version")
             [ "$version" != 0.0.0 ] || { echo "skip $name: not versioned yet"; continue; }

@@ -1,7 +1,7 @@
 #!/bin/sh
 # The consumer fixture (REQ-006, D-6): packs every publishable package, installs the tarballs into a
 # temporary copy of apps/consumer-fixture (not workspace links), and runs each shared config there, then
-# a Vite build whose CSS must carry the tokens. FIXTURE_PLANT=lint|format|style|type adds one violation,
+# a Vite build whose CSS must carry the tokens. FIXTURE_PLANT=lint|format|style|vue-style|type adds one violation,
 # to prove the matching tool fails.
 set -eu
 root=$(cd "$(dirname "$0")/.." && pwd)
@@ -14,6 +14,7 @@ echo "fixture: build and pack the packages"
 (cd "$root" && TURBO_TELEMETRY_DISABLED=1 npx turbo run build --output-logs=errors-only)
 mkdir "$work/packs"
 for dir in "$root"/packages/*/; do
+  [ -f "$dir/package.json" ] || continue
   (cd "$dir" && npm pack --silent --pack-destination "$work/packs" >/dev/null)
 done
 
@@ -38,13 +39,13 @@ case ${FIXTURE_PLANT:-} in
   lint) printf 'export function plant(): number {\n  let unused = 1;\n  return 2;\n}\n' >src/plant.ts ;;
   format) printf 'export const plant   =  1\n' >src/plant.ts ;;
   style) printf '.plant {\n  color: #ff0000;\n}\n' >src/plant.css ;;
+  vue-style) printf '<template>\n  <p>plant</p>\n</template>\n\n<style>\n.plant {\n  margin: 0;\n}\n</style>\n' >src/PlantBlock.vue ;;
   type) printf 'export const plant: number = "one";\n' >src/plant.ts ;;
-  *) echo "error: FIXTURE_PLANT must be lint, format, style or type" >&2; exit 2 ;;
+  *) echo "error: FIXTURE_PLANT must be lint, format, style, vue-style or type" >&2; exit 2 ;;
 esac
 
-echo "fixture: eslint";    npx eslint --max-warnings 0 .
+echo "fixture: eslint (scripts, Vue and CSS)"; npx eslint --max-warnings 0 .
 echo "fixture: prettier";  npx prettier --check src
-echo "fixture: stylelint"; npx stylelint "src/**/*.{css,vue}"
 echo "fixture: vue-tsc";   npx vue-tsc --noEmit
 echo "fixture: vite build"; npx vite build --logLevel warn
 

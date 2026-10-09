@@ -1,7 +1,7 @@
 {
   "name": "@reference-systems-lab/eslint-config",
   "version": "0.0.0",
-  "description": "The shared ESLint flat config: typescript-eslint type-checked, Vue and accessibility rules",
+  "description": "The shared ESLint flat config: typescript-eslint type-checked, Vue and accessibility rules, and CSS with colours only from tokens",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -21,6 +21,7 @@
     "check:package": "publint --strict --pack npm"
   },
   "dependencies": {
+    "@eslint/css": "^2.0.0",
     "@eslint/js": "^10.0.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-vue": "^10.11.1",

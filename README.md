@@ -32,13 +32,12 @@ Published privately to GitHub Packages under `@reference-systems-lab`
 ([ADR 0002](docs/adr/0002-design-system-stack.md); the toolchain in
 [ADR 0001](docs/adr/0001-shared-toolchain.md)):
 
-| Package                                   | What it gives you                                                                                                         |
-| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| `@reference-systems-lab/tokens`           | `tokens.css` (custom properties in `@layer ds.tokens`, light and dark), plus `tokens.json` and typed `tokens` for scripts |
-| `@reference-systems-lab/eslint-config`    | ESLint flat config: typescript-eslint type-checked, Vue, accessibility; Prettier owns formatting                          |
-| `@reference-systems-lab/prettier-config`  | Prettier config                                                                                                           |
-| `@reference-systems-lab/stylelint-config` | Stylelint for CSS and Vue, with colours only from tokens                                                                  |
-| `@reference-systems-lab/tsconfig`         | `base.json`, `vue-app.json` and `library.json`, all strict, for TypeScript 6.0                                            |
+| Package                                  | What it gives you                                                                                                                                       |
+| ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@reference-systems-lab/tokens`          | `tokens.css` (custom properties in `@layer ds.tokens`, light and dark), plus `tokens.json` and typed `tokens` for scripts                               |
+| `@reference-systems-lab/eslint-config`   | ESLint flat config: typescript-eslint type-checked, Vue, accessibility, and CSS (`@eslint/css`) with colours only from tokens; Prettier owns formatting |
+| `@reference-systems-lab/prettier-config` | Prettier config                                                                                                                                         |
+| `@reference-systems-lab/tsconfig`        | `base.json`, `vue-app.json` and `library.json`, all strict, for TypeScript 6.0                                                                          |
 
 Components (`ui-core`, `ui`) and the documentation site come later.
 
@@ -55,20 +54,23 @@ machine, in `~/.npmrc` as `//npm.pkg.github.com/:_authToken=<token>`. In the con
 
 ```sh
 npm install -D @reference-systems-lab/eslint-config @reference-systems-lab/prettier-config \
-  @reference-systems-lab/stylelint-config @reference-systems-lab/tsconfig
+  @reference-systems-lab/tsconfig
 npm install @reference-systems-lab/tokens
 ```
 
 ```js
 // eslint.config.js
 import config from "@reference-systems-lab/eslint-config";
-export default [...config, { languageOptions: { parserOptions: { tsconfigRootDir: import.meta.dirname } } }];
-
-// stylelint.config.js
-export default { extends: ["@reference-systems-lab/stylelint-config"] };
+export default [
+  ...config,
+  { languageOptions: { parserOptions: { tsconfigRootDir: import.meta.dirname } } },
+];
 ```
 
-The ESLint config type-checks through TypeScript's project service, so every `.ts` and `.vue`
+The ESLint config also lints CSS (`@eslint/css`): no literal colours (hex, colour functions,
+named colours), only `var(--ds-color-…)`. It can't read `<style>` blocks, so `.vue` files may not
+have one: a component imports its own stylesheet (`import "./Button.css"`), and the config fails a
+`.vue` file with a `<style>` block. The ESLint config type-checks through TypeScript's project service, so every `.ts` and `.vue`
 file it lints must be in a `tsconfig.json` `include` (config files in plain `.js` are not
 type-checked).
 

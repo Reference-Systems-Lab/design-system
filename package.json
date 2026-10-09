@@ -29,11 +29,9 @@
     "@changesets/cli": "3.0.3",
     "@reference-systems-lab/eslint-config": "*",
     "@reference-systems-lab/prettier-config": "*",
-    "@reference-systems-lab/stylelint-config": "*",
     "eslint": "10.11.0",
     "prettier": "3.9.9",
     "publint": "0.3.25",
-    "stylelint": "17.16.0",
     "turbo": "2.11.6",
     "typescript": "6.0.3"
   },

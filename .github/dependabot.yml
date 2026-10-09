@@ -25,16 +25,7 @@ updates:
         patterns: ["vue", "vue-tsc", "@vitejs/*", "vite"]
       lint:
         patterns:
-          [
-            "eslint",
-            "@eslint/*",
-            "eslint-*",
-            "typescript-eslint",
-            "vue-eslint-parser",
-            "prettier",
-            "stylelint",
-            "stylelint-*",
-          ]
+          ["eslint", "@eslint/*", "eslint-*", "typescript-eslint", "vue-eslint-parser", "prettier"]
       dependencies:
         patterns: ["*"]
         update-types: [minor, patch]
