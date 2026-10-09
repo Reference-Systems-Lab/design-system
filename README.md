@@ -28,7 +28,8 @@ frontend uses.
 
 ## Packages
 
-Published privately to GitHub Packages under `@reference-systems-lab`
+Published to GitHub Packages under `@reference-systems-lab`, as public packages (installing still
+needs a token)
 ([ADR 0002](docs/adr/0002-design-system-stack.md); the toolchain in
 [ADR 0001](docs/adr/0001-shared-toolchain.md)):
 
