@@ -1,0 +1,7 @@
+{
+  "name": "consumer-fixture",
+  "version": "0.0.0",
+  "private": true,
+  "description": "A stand-in consumer: scripts/fixture.sh installs the packed packages here and runs every shared config against it",
+  "type": "module"
+}

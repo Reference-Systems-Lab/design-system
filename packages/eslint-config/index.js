@@ -1,10 +1,12 @@
 // The shared ESLint flat config (design-system ADR 0001): JavaScript recommended, typescript-eslint's
 // type-checked rules, Vue's recommended rules with TypeScript in <script lang="ts">, and the Vue
-// accessibility rules. In a consumer's eslint.config.js:
+// accessibility rules, with the formatting rules that Prettier owns switched off. In a consumer's
+// eslint.config.js:
 //
 //   import config from "@reference-systems-lab/eslint-config";
 //   export default [...config, { languageOptions: { parserOptions: { tsconfigRootDir: import.meta.dirname } } }];
 import js from "@eslint/js";
+import prettier from "eslint-config-prettier/flat";
 import vue from "eslint-plugin-vue";
 import vueA11y from "eslint-plugin-vuejs-accessibility";
 import globals from "globals";
@@ -28,4 +30,6 @@ export default [
   },
   // Plain JavaScript (config files, scripts) isn't type-checked.
   { files: ["**/*.{js,mjs,cjs}"], ...tseslint.configs.disableTypeChecked },
+  // Last: Prettier owns formatting, so the formatting rules above (Vue's template layout among them) are off.
+  prettier,
 ];
