@@ -1,6 +1,6 @@
 # 2. The design system's stack
 
-- **Status:** Accepted
+- **Status:** Accepted; amended 2026-10-09 (packages are public on GitHub Packages)
 - **Date:** 2026-10-09
 
 ## Context
@@ -10,7 +10,7 @@ frontend, as versioned packages (README). Its consumers differ: the storefront i
 Nuxt, checkout is a minimal SPA under a strict content security policy, and admin is a Vue SPA. The
 spike (design-system#1) compared monorepo tools, token pipelines, component foundations, styling,
 packaging and docs, and decided DS-D1 to DS-D8. The walking skeleton (design-system#2) builds the
-first slice: the workspace, the tokens, the shared configuration, a consumer fixture and private
+first slice: the workspace, the tokens, the shared configuration, a consumer fixture and
 releases. Components, the docs site and the playground come later; this record covers the whole
 stack so they follow it.
 
@@ -37,8 +37,10 @@ stack so they follow it.
   build with tsdown; the config packages and tokens need no compiler (#2 D-3). Every package is
   checked by publint (and attw where it ships types) and by a consumer fixture that installs the
   packed tarballs.
-- **Registry and releases (DS-D8, #2 D-1).** Private packages on GitHub Packages under
-  `@reference-systems-lab`, with each consumer repository granted read access. Versions are bumped
+- **Registry and releases (DS-D8, #2 D-1, D-11).** Packages on GitHub Packages under
+  `@reference-systems-lab`, public since the first release (amended 2026-10-09; the spike had chosen
+  private). GitHub Packages still needs a token to install, even a public package, and each consumer
+  repository is granted read access. Versions are bumped
   with Changesets in a pull request; every merge to `main` publishes the versions not yet published,
   each tarball with a build-provenance attestation. Consumers check integrity through their lockfile
   and `gh attestation verify`, fetching the tarball from its `dist.tarball` URL with their read

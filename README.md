@@ -28,7 +28,8 @@ frontend uses.
 
 ## Packages
 
-Published privately to GitHub Packages under `@reference-systems-lab`
+Published to GitHub Packages under `@reference-systems-lab`, as public packages (installing still
+needs a token)
 ([ADR 0002](docs/adr/0002-design-system-stack.md); the toolchain in
 [ADR 0001](docs/adr/0001-shared-toolchain.md)):
 
@@ -50,6 +51,9 @@ machine, in `~/.npmrc` as `//npm.pkg.github.com/:_authToken=<token>`. In the con
 ```sh
 # .npmrc
 @reference-systems-lab:registry=https://npm.pkg.github.com
+# The hardened min-release-age=7 would hold back each of our releases for a week; our own,
+# attested packages are exempt (npm's min-release-age-exclude).
+min-release-age-exclude[]=@reference-systems-lab/*
 ```
 
 ```sh
