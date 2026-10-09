@@ -20,10 +20,13 @@
     "check:package": "turbo run check:package",
     "check": "turbo run build lint typecheck test check:package",
     "lint:root": "eslint *.js && prettier --check .",
-    "fixture": "sh scripts/fixture.sh"
+    "fixture": "sh scripts/fixture.sh",
+    "changeset": "changeset",
+    "version-packages": "changeset version && npm install --package-lock-only --no-audit --no-fund"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.5",
+    "@changesets/cli": "3.0.3",
     "@reference-systems-lab/eslint-config": "*",
     "@reference-systems-lab/prettier-config": "*",
     "@reference-systems-lab/stylelint-config": "*",
