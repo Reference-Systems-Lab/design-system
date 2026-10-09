@@ -1,6 +1,6 @@
 {
   "name": "@reference-systems-lab/tokens",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "The commerce platform's design tokens: CSS custom properties in @layer ds.tokens, light and dark, plus JSON and JS",
   "license": "MIT",
   "repository": {
