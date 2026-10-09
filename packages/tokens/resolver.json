@@ -17,6 +17,9 @@
           "$ref": "src/primitive/radius.json"
         },
         {
+          "$ref": "src/primitive/stroke.json"
+        },
+        {
           "$ref": "src/semantic/common.json"
         }
       ]

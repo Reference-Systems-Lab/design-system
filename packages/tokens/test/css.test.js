@@ -31,11 +31,32 @@ describe("tokens.css", () => {
     expect(mediaSel).toBeLessThan(attr);
   });
 
-  it("makes every semantic colour and elevation a var() of a primitive", () => {
-    const semantic = [...body.matchAll(/--ds-(color|elevation)-[\w-]+:\s*([^;]+);/g)];
+  it("makes every semantic token a var() of a primitive", () => {
+    const semantic = [
+      ...body.matchAll(
+        /--ds-(color|elevation|text-size|space|radius|focus-width)[\w-]*:\s*([^;]+);/g,
+      ),
+    ];
     expect(semantic.length).toBeGreaterThan(0);
-    for (const [decl, , value] of semantic)
-      expect(value, decl).toMatch(/var\(--ds-palette-[\w-]+\)/);
+    for (const [decl, group, value] of semantic) {
+      // A shadow is a compound value: its colour is the primitive; offsets and blur are its own.
+      if (group === "elevation") expect(value, decl).toMatch(/var\(--ds-palette-[\w-]+\)/);
+      else expect(value, decl).toMatch(/^var\(--ds-(palette|font|size|rounding|stroke)-[\w-]+\)$/);
+    }
+  });
+
+  it("re-declares the whole semantic layer on .ds-theme-scope", () => {
+    const scope = body.slice(body.indexOf("  .ds-theme-scope {"), body.indexOf("@media"));
+    for (const name of [
+      "--ds-color-text:",
+      "--ds-elevation-1:",
+      "--ds-text-size-body:",
+      "--ds-space-inset:",
+      "--ds-radius-control:",
+      "--ds-focus-width:",
+    ])
+      expect(scope).toContain(name);
+    expect(scope).not.toMatch(/--ds-palette-[\w-]+:/); // references primitives, never declares them
   });
 
   it("declares primitives once, on the light block only", () => {

@@ -7,8 +7,9 @@ import css from "@terrazzo/plugin-css";
 import js from "@terrazzo/plugin-js";
 
 const variableName = (token) => `--ds-${token.id.replaceAll(".", "-")}`;
-// The tokens that differ by theme; everything else is declared once, on the light block.
-const themed = ["color.*", "elevation.*"];
+// The semantic layer: re-declared on .ds-theme-scope and for dark, so overriding a primitive on a scope
+// element reaches its semantic tokens. Primitives are declared once, on the light block.
+const themed = ["color.*", "elevation.*", "text-size.*", "space.*", "radius.*", "focus-width"];
 
 const indent = (body) =>
   body

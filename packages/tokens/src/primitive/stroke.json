@@ -1,0 +1,17 @@
+{
+  "stroke": {
+    "$type": "dimension",
+    "1": {
+      "$value": {
+        "value": 1,
+        "unit": "px"
+      }
+    },
+    "2": {
+      "$value": {
+        "value": 2,
+        "unit": "px"
+      }
+    }
+  }
+}
