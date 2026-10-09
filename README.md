@@ -68,6 +68,10 @@ export default [...config, { languageOptions: { parserOptions: { tsconfigRootDir
 export default { extends: ["@reference-systems-lab/stylelint-config"] };
 ```
 
+The ESLint config type-checks through TypeScript's project service, so every `.ts` and `.vue`
+file it lints must be in a `tsconfig.json` `include` (config files in plain `.js` are not
+type-checked).
+
 ```jsonc
 // package.json: "prettier": "@reference-systems-lab/prettier-config"
 // tsconfig.json
@@ -84,8 +88,10 @@ export default { extends: ["@reference-systems-lab/stylelint-config"] };
 
 Read semantic tokens only (`--ds-color-*`, `--ds-space-*`, `--ds-radius-*`, `--ds-text-size-*`,
 `--ds-elevation-*`); `--ds-palette-*` are primitives. The theme follows the system setting; set
-`data-theme="light"` or `"dark"` on an element to force one for it and its children, and add
-`ds-theme-scope` to an element whose primitives you override so its semantic tokens follow.
+`data-theme="light"` or `"dark"` on an element to force one for it and its children. To override
+primitives (a brand colour, a tighter spacing scale) for one part of a page, add `ds-theme-scope` to
+that element so its semantic tokens follow; if that element also forces a theme, put `data-theme` on
+the same element, because CSS can't tell which of several nested `data-theme` ancestors is nearest.
 
 Check a package's provenance with `gh attestation verify <tarball> --owner Reference-Systems-Lab`,
 downloading the tarball from its `dist.tarball` URL with your token.
@@ -104,7 +110,9 @@ npm run fixture   # install the packed packages in a clean consumer and run ever
 ## Releasing
 
 1. Each pull request that changes a package adds a changeset (`npm run changeset`); CI fails
-   without one. A breaking change is a major version.
+   without one. A breaking change is a major version. That includes Dependabot pull requests that
+   touch a package: add a patch changeset, or `npx changeset add --empty` when the change doesn't
+   reach consumers.
 2. To release, open a pull request that runs `npm run version-packages`: it bumps the versions,
    writes each package's `CHANGELOG.md` and refreshes the lockfile.
 3. Merging it publishes every new version to GitHub Packages, each tarball attested
