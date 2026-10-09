@@ -29,7 +29,8 @@ stack so they follow it.
   Reka UI, which it wraps and never re-exports. Strict-CSP consumers use native controls instead of
   the Reka parts that inject styles.
 - **Styling (DS-D4).** Plain CSS with `ds-` classes in `@layer ds.tokens, ds.base, ds.components`,
-  one stylesheet per component, and authoring rules that keep components safe under a strict CSP: no
+  one stylesheet per component, written as a `.css` file beside the component and imported by it,
+  not a `<style>` block, so ESLint's CSS rules cover it (ADR 0001), and authoring rules that keep components safe under a strict CSP: no
   `v-bind()` in styles, no `style` bindings rendered on the server, no injected stylesheets or
   `v-html`, semantic tokens only.
 - **Packaging (DS-D5).** ESM only, with an `exports` map per entry and Vue as a peer. Components will

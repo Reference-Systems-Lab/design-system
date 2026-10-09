@@ -18,11 +18,14 @@ package manager of commerce's ADR 0001 (DE-2).
 - **Published here, as versioned packages** on GitHub Packages under `@reference-systems-lab`
   (DE-10):
   - `eslint-config`: ESLint 10 flat config with typescript-eslint `recommendedTypeChecked`,
-    eslint-plugin-vue's recommended rules and eslint-plugin-vuejs-accessibility;
+    eslint-plugin-vue's recommended rules and eslint-plugin-vuejs-accessibility, plus CSS through
+    ESLint's own `@eslint/css`, with no literal colours (hex, colour functions, named colours), because
+    styling flows from tokens (AGENTS.md);
   - `prettier-config`: Prettier 3;
-  - `stylelint-config`: Stylelint with `stylelint-config-standard-vue`, and no raw colour values
-    outside the tokens, because styling flows from tokens (AGENTS.md);
   - `tsconfig`: `base`, `vue-app` and `library` presets, all strict.
+- **CSS lives in `.css` files.** `@eslint/css` can't read a `.vue` file's `<style>` block, so a
+  component imports its own stylesheet (`import "./Button.css"`) and the ESLint config rejects
+  `<style>` blocks; every line of CSS is linted.
 - **TypeScript 6.0 (`~6.0`)**, with vue-tsc 3 for templates, until the Vue tools support TypeScript
   7: TypeScript 7 ships no compiler API, which typescript-eslint, vue-tsc and openapi-typescript use.
   Dependabot ignores TypeScript majors.
@@ -35,6 +38,10 @@ package manager of commerce's ADR 0001 (DE-2).
 ## Alternatives
 
 - **A config copy per repository:** no package to publish, but the copies drift.
+- **Stylelint for CSS** (the spike's choice, DE-3): the usual CSS linter, and it reads `<style>`
+  blocks, but every release depends on `braces` through `micromatch`, which has an unfixed
+  high-severity advisory (GHSA-vfj7-8cjw-p6xm). We allow no high-severity advisory, so CSS moved to
+  `@eslint/css`: one linter instead of two, at the cost of keeping CSS out of `.vue` files.
 - **Biome or oxlint instead of ESLint and Prettier:** faster, but without the Vue template and
   accessibility rules the frontends rely on.
 - **TypeScript 7 now:** faster builds, but no compiler API, so the type-aware lint, vue-tsc and SDK
@@ -46,3 +53,4 @@ package manager of commerce's ADR 0001 (DE-2).
 - Every consumer needs read access to the packages: `GITHUB_TOKEN` in CI (granted per package) and a
   token with `read:packages` on a developer's machine.
 - Moving to TypeScript 7 is one deliberate change, made when the Vue tools support it.
+- Components and apps keep CSS beside their `.vue` files rather than inside them.
