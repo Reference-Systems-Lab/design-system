@@ -86,9 +86,11 @@ jobs:
         env:
           BASE_REF: ${{ github.base_ref }}
         run: |
-          # A version pull request (npm run version-packages) consumes the changesets it releases, so
-          # it deletes them instead of adding one.
-          if [ -n "$(git diff --name-only --diff-filter=D "origin/$BASE_REF" -- '.changeset/*.md')" ]; then
+          # A version pull request (npm run version-packages) consumes the changesets it releases: it
+          # deletes them and bumps package versions, instead of adding a changeset.
+          deleted=$(git diff --name-only --diff-filter=D "origin/$BASE_REF" -- '.changeset/*.md')
+          bumped=$(git diff "origin/$BASE_REF" -- 'packages/*/package.json' | grep -c '^+  "version":' || true)
+          if [ -n "$deleted" ] && [ "$bumped" -gt 0 ]; then
             echo "This pull request releases changesets (a version PR); nothing to check."
             exit 0
           fi
