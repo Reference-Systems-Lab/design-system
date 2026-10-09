@@ -1,0 +1,11 @@
+.fixture {
+  padding: var(--ds-space-inset);
+  font-size: var(--ds-text-size-body);
+}
+
+.fixture-button {
+  border: var(--ds-focus-width) solid var(--ds-color-border-strong);
+  border-radius: var(--ds-radius-control);
+  background: var(--ds-color-accent);
+  color: var(--ds-color-on-accent);
+}

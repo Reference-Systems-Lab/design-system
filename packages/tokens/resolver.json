@@ -1,0 +1,53 @@
+{
+  "name": "commerce design tokens",
+  "version": "2025.10",
+  "sets": {
+    "primitive": {
+      "sources": [
+        {
+          "$ref": "src/primitive/color.json"
+        },
+        {
+          "$ref": "src/primitive/type.json"
+        },
+        {
+          "$ref": "src/primitive/space.json"
+        },
+        {
+          "$ref": "src/primitive/radius.json"
+        },
+        {
+          "$ref": "src/primitive/stroke.json"
+        },
+        {
+          "$ref": "src/semantic/common.json"
+        }
+      ]
+    }
+  },
+  "modifiers": {
+    "theme": {
+      "contexts": {
+        "light": [
+          {
+            "$ref": "src/semantic/light.json"
+          }
+        ],
+        "dark": [
+          {
+            "$ref": "src/semantic/dark.json"
+          }
+        ]
+      },
+      "default": "light"
+    }
+  },
+  "resolutionOrder": [
+    {
+      "$ref": "#/sets/primitive"
+    },
+    {
+      "$ref": "#/modifiers/theme"
+    }
+  ]
+}

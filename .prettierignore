@@ -1,0 +1,7 @@
+dist/
+.turbo/
+node_modules/
+package-lock.json
+CHANGELOG.md
+# Managed by the organization setup (agent-workflow-tooling), not this repository.
+.github/ISSUE_TEMPLATE/

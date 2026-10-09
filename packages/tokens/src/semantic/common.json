@@ -1,0 +1,51 @@
+{
+  "text-size": {
+    "$type": "dimension",
+    "small": {
+      "$value": "{font.size.200}"
+    },
+    "body": {
+      "$value": "{font.size.300}"
+    },
+    "lead": {
+      "$value": "{font.size.400}"
+    },
+    "heading": {
+      "$value": "{font.size.600}"
+    },
+    "display": {
+      "$value": "{font.size.700}"
+    }
+  },
+  "space": {
+    "$type": "dimension",
+    "inline": {
+      "$value": "{size.2}"
+    },
+    "inset": {
+      "$value": "{size.4}"
+    },
+    "stack": {
+      "$value": "{size.6}"
+    },
+    "section": {
+      "$value": "{size.12}"
+    }
+  },
+  "radius": {
+    "$type": "dimension",
+    "control": {
+      "$value": "{rounding.sm}"
+    },
+    "card": {
+      "$value": "{rounding.md}"
+    },
+    "pill": {
+      "$value": "{rounding.full}"
+    }
+  },
+  "focus-width": {
+    "$type": "dimension",
+    "$value": "{stroke.2}"
+  }
+}

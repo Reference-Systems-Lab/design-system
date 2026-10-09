@@ -1,0 +1,42 @@
+{
+  "name": "@reference-systems-lab/tokens",
+  "version": "0.0.0",
+  "description": "The commerce platform's design tokens: CSS custom properties in @layer ds.tokens, light and dark, plus JSON and JS",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Reference-Systems-Lab/design-system.git",
+    "directory": "packages/tokens"
+  },
+  "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/tokens.d.ts",
+      "default": "./dist/tokens.js"
+    },
+    "./tokens.css": "./dist/tokens.css",
+    "./tokens.json": "./dist/tokens.json",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tz build --config terrazzo.config.mjs && node scripts/emit.mjs",
+    "test": "vitest run",
+    "lint": "eslint . && prettier --check . --ignore-path ../../.gitignore --ignore-path ../../.prettierignore",
+    "check:package": "publint --strict --pack npm && attw --pack . --profile esm-only --exclude-entrypoints ./tokens.css"
+  },
+  "devDependencies": {
+    "@terrazzo/cli": "2.7.1",
+    "@terrazzo/plugin-css": "2.7.1",
+    "@terrazzo/plugin-js": "2.7.1",
+    "vitest": "5.0.3"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
+}

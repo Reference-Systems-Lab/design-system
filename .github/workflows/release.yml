@@ -1,0 +1,151 @@
+name: Release
+
+# Every merge to main publishes the package versions that aren't on GitHub Packages yet (design-system
+# ADR 0002; #2 D-1). Versions are bumped beforehand in a pull request that runs `npm run
+# version-packages`, so while changesets are still pending nothing publishes, and 0.0.0 never does.
+# Rerunning is safe: a published version is skipped, never published again.
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+env:
+  TURBO_TELEMETRY_DISABLED: "1"
+
+jobs:
+  pack:
+    name: Build and pack
+    runs-on: ubuntu-26.04
+    timeout-minutes: 15
+    outputs:
+      ready: ${{ steps.ready.outputs.ready }}
+      packed: ${{ steps.pack.outputs.packed }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Ready to publish only when no changeset is pending
+        id: ready
+        run: |
+          pending=$(find .changeset -name '*.md' ! -name README.md | wc -l)
+          if [ "$pending" -gt 0 ]; then
+            echo "$pending changeset(s) pending: run npm run version-packages in a pull request to release them."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Set up Node
+        if: steps.ready.outputs.ready == 'true'
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+
+      - name: Install, build and check
+        if: steps.ready.outputs.ready == 'true'
+        run: |
+          npm ci --no-audit --no-fund
+          npx turbo run build test check:package
+
+      - name: Pack every versioned package
+        id: pack
+        if: steps.ready.outputs.ready == 'true'
+        run: |
+          mkdir -p packs
+          for dir in packages/*/; do
+            [ -f "$dir/package.json" ] || continue
+            name=$(node -p "require('./$dir/package.json').name")
+            version=$(node -p "require('./$dir/package.json').version")
+            [ "$version" != 0.0.0 ] || { echo "skip $name: not versioned yet"; continue; }
+            file=$(cd "$dir" && npm pack --silent --pack-destination ../../packs)
+            printf '%s\t%s\t%s\n' "$name" "$version" "$file" >> packs/manifest.tsv
+          done
+          if [ -s packs/manifest.tsv ]; then
+            cat packs/manifest.tsv
+            echo "packed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "nothing to pack: every package is still 0.0.0"
+          fi
+
+      - name: Keep the tarballs for publishing
+        if: steps.ready.outputs.ready == 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: packs
+          path: packs/
+          if-no-files-found: ignore
+          retention-days: 7
+
+  publish:
+    name: Attest and publish
+    needs: pack
+    if: needs.pack.outputs.packed == 'true'
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
+    permissions: # no contents: this job checks out nothing
+      packages: write # publish to GitHub Packages
+      id-token: write # sign the attestations
+      attestations: write
+    steps:
+      - name: Fetch the tarballs
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: packs
+          path: packs
+
+      - name: Set up Node for GitHub Packages
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          registry-url: https://npm.pkg.github.com
+          scope: "@reference-systems-lab"
+
+      - name: Choose the versions not published yet
+        id: choose
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p publish
+          count=0
+          while IFS="$(printf '\t')" read -r name version file; do
+            # The tarball must be a plain file name, and must say inside what the manifest says.
+            printf '%s\n' "$file" | grep -Eq '^[a-z0-9][a-z0-9.-]*\.tgz$' || { echo "::error::unexpected tarball name '$file'"; exit 1; }
+            inside=$(tar -xOzf "packs/$file" package/package.json | node -e 'const p = JSON.parse(require("fs").readFileSync(0, "utf8")); console.log(p.name + "@" + p.version)')
+            [ "$inside" = "$name@$version" ] || { echo "::error::$file contains $inside, not $name@$version"; exit 1; }
+            # Only "not found" means unpublished; any other error stops the release.
+            if out=$(npm view "$name@$version" version 2>&1); then
+              echo "$name@$version is already published"
+            elif printf '%s' "$out" | grep -q E404; then
+              mv "packs/$file" publish/
+              count=$((count + 1))
+            else
+              printf '%s\n' "$out"
+              echo "::error::could not check whether $name@$version is published"
+              exit 1
+            fi
+          done < packs/manifest.tsv
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+
+      - name: Attest the tarballs' build provenance
+        if: steps.choose.outputs.count != '0'
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: publish/*.tgz
+
+      - name: Publish
+        if: steps.choose.outputs.count != '0'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for tarball in publish/*.tgz; do
+            npm publish "$tarball"
+            echo "Published \`$tarball\`" >> "$GITHUB_STEP_SUMMARY"
+          done
