@@ -1,2 +1,6 @@
 # Agent working files such as worklog ledgers; the record lives in GitHub issues.
 .agent/
+node_modules/
+dist/
+.turbo/
+*.tgz
