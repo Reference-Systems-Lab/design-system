@@ -50,6 +50,9 @@ machine, in `~/.npmrc` as `//npm.pkg.github.com/:_authToken=<token>`. In the con
 ```sh
 # .npmrc
 @reference-systems-lab:registry=https://npm.pkg.github.com
+# The hardened min-release-age=7 would hold back each of our releases for a week; our own,
+# attested packages are exempt (npm's min-release-age-exclude).
+min-release-age-exclude[]=@reference-systems-lab/*
 ```
 
 ```sh
