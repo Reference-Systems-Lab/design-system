@@ -104,9 +104,3 @@ jobs:
     steps:
       - name: Review the dependencies this pull request adds
         uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
-        with:
-          # braces <= 3.0.3 (stack exhaustion on deeply nested patterns) has no fixed release yet. It is
-          # a development tool here only (stylelint > micromatch > braces), fed our own glob patterns,
-          # and no published package depends on it. Remove this once braces ships a fix (Dependabot
-          # proposes it); every other advisory still fails the check.
-          allow-ghsas: GHSA-vfj7-8cjw-p6xm
