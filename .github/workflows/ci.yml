@@ -85,7 +85,14 @@ jobs:
       - name: A changed package has a changeset
         env:
           BASE_REF: ${{ github.base_ref }}
-        run: npx changeset status --since="origin/$BASE_REF"
+        run: |
+          # A version pull request (npm run version-packages) consumes the changesets it releases, so
+          # it deletes them instead of adding one.
+          if [ -n "$(git diff --name-only --diff-filter=D "origin/$BASE_REF" -- '.changeset/*.md')" ]; then
+            echo "This pull request releases changesets (a version PR); nothing to check."
+            exit 0
+          fi
+          npx changeset status --since="origin/$BASE_REF"
 
   dependency-review:
     name: Dependency review

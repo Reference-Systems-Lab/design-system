@@ -6,7 +6,9 @@
 set -eu
 root=$(cd "$(dirname "$0")/.." && pwd)
 work=$(mktemp -d)
-trap 'rm -rf "$work"' EXIT INT TERM
+trap 'rm -rf "$work"' EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
 
 echo "fixture: build and pack the packages"
 (cd "$root" && TURBO_TELEMETRY_DISABLED=1 npx turbo run build --output-logs=errors-only)
@@ -24,7 +26,7 @@ node --input-type=module -e '
   import { readFileSync, readdirSync, writeFileSync } from "node:fs";
   const pkg = JSON.parse(readFileSync("package.template.json", "utf8"));
   for (const file of readdirSync("../packs")) {
-    const name = "@reference-systems-lab/" + file.replace(/^reference-systems-lab-/, "").replace(/-\d+\.\d+\.\d+\.tgz$/, "");
+    const name = "@reference-systems-lab/" + file.replace(/^reference-systems-lab-/, "").replace(/-\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?\.tgz$/, "");
     pkg.devDependencies[name] = "file:../packs/" + file;
   }
   writeFileSync("package.json", JSON.stringify(pkg, null, 2) + "\n");

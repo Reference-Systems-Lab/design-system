@@ -8,7 +8,17 @@
       "outputs": ["dist/**"]
     },
     "lint": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/eslint.config.js",
+        "$TURBO_ROOT$/stylelint.config.js",
+        "$TURBO_ROOT$/.prettierignore",
+        "$TURBO_ROOT$/.gitignore",
+        "$TURBO_ROOT$/packages/eslint-config/index.js",
+        "$TURBO_ROOT$/packages/prettier-config/index.js",
+        "$TURBO_ROOT$/packages/stylelint-config/index.js"
+      ]
     },
     "typecheck": {
       "dependsOn": ["^build"]
