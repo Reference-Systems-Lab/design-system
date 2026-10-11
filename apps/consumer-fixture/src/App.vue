@@ -14,6 +14,9 @@ function increment(): void {
 <template>
   <main class="fixture">
     <h1>{{ props.label }}</h1>
-    <button type="button" class="fixture-button" @click="increment">Added {{ count }}</button>
+    <!-- data-* is allowed under strict templates (vue-app.json's dataAttributes). -->
+    <button type="button" class="fixture-button" :data-count="count" @click="increment">
+      Added {{ count }}
+    </button>
   </main>
 </template>

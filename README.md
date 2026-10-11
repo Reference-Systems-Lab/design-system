@@ -33,12 +33,12 @@ needs a token)
 ([ADR 0002](docs/adr/0002-design-system-stack.md); the toolchain in
 [ADR 0001](docs/adr/0001-shared-toolchain.md)):
 
-| Package                                  | What it gives you                                                                                                                                       |
-| ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `@reference-systems-lab/tokens`          | `tokens.css` (custom properties in `@layer ds.tokens`, light and dark), plus `tokens.json` and typed `tokens` for scripts                               |
-| `@reference-systems-lab/eslint-config`   | ESLint flat config: typescript-eslint type-checked, Vue, accessibility, and CSS (`@eslint/css`) with colours only from tokens; Prettier owns formatting |
-| `@reference-systems-lab/prettier-config` | Prettier config                                                                                                                                         |
-| `@reference-systems-lab/tsconfig`        | `base.json`, `vue-app.json` and `library.json`, all strict, for TypeScript 6.0                                                                          |
+| Package                                  | What it gives you                                                                                                                                                       |
+| ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@reference-systems-lab/tokens`          | `tokens.css` (custom properties in `@layer ds.tokens`, light and dark), plus `tokens.json` and typed `tokens` for scripts                                               |
+| `@reference-systems-lab/eslint-config`   | ESLint flat config: typescript-eslint type-checked, Vue, accessibility, and CSS (`@eslint/css`) with colours only from tokens; Prettier owns formatting; a Nuxt variant |
+| `@reference-systems-lab/prettier-config` | Prettier config                                                                                                                                                         |
+| `@reference-systems-lab/tsconfig`        | `base.json`, `vue-app.json` and `library.json`, all strict, for TypeScript 6.0                                                                                          |
 
 Components (`ui-core`, `ui`) and the documentation site come later.
 
@@ -71,6 +71,17 @@ export default [
 ];
 ```
 
+In a Nuxt app, import `@reference-systems-lab/eslint-config/nuxt` instead. It is the same config,
+plus Nuxt's conventions:
+
+- it ignores `.nuxt/`, `.output/` and `.data/`;
+- it leaves auto-imported names to vue-tsc (`no-undef` off in `.vue`);
+- it accepts `app.vue`, `error.vue`, pages and layouts named after their files.
+
+Run `nuxt prepare` before linting, so the type-checked rules see Nuxt's generated types.
+
+Both configs fail `v-html`, an XSS sink, and `console` calls.
+
 The ESLint config also lints CSS (`@eslint/css`): no literal colours (hex, colour functions,
 named colours), only `var(--ds-color-…)`. It can't read `<style>` blocks, so `.vue` files may not
 have one: a component imports its own stylesheet (`import "./Button.css"`), and the config fails a
@@ -83,6 +94,9 @@ type-checked).
 // tsconfig.json
 { "extends": "@reference-systems-lab/tsconfig/vue-app.json" }
 ```
+
+`vue-app.json` turns on vue-tsc's strict templates, so an unknown prop or attribute fails the type
+check, and allows `data-*` attributes. In Nuxt, extend it through `typescript.tsConfig.extends`.
 
 ```css
 /* once, at the app's entry: import "@reference-systems-lab/tokens/tokens.css" */
