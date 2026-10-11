@@ -104,7 +104,7 @@ downloading the tarball from its `dist.tarball` URL with your token.
 
 ## Developing
 
-You need Node 24 and npm 11. The `.npmrc` is hardened (commerce ADR 0001): a dependency must be a
+You need Node 26 (`.nvmrc`) and npm 11. The `.npmrc` is hardened (commerce ADR 0001): a dependency must be a
 week old, from the registry, and without install scripts.
 
 ```sh
