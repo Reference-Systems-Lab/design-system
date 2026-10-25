@@ -1,7 +1,7 @@
 {
   "name": "@reference-systems-lab/eslint-config",
   "version": "0.1.0",
-  "description": "The shared ESLint flat config: typescript-eslint type-checked, Vue and accessibility rules, and CSS with colours only from tokens",
+  "description": "The shared ESLint flat config: typescript-eslint type-checked, Vue and accessibility rules, CSS with colours only from tokens, and a Nuxt variant",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -11,10 +11,12 @@
   "type": "module",
   "exports": {
     ".": "./index.js",
+    "./nuxt": "./nuxt.js",
     "./package.json": "./package.json"
   },
   "files": [
-    "index.js"
+    "index.js",
+    "nuxt.js"
   ],
   "scripts": {
     "lint": "eslint . && prettier --check . --ignore-path ../../.gitignore --ignore-path ../../.prettierignore",

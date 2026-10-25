@@ -6,6 +6,7 @@
 //
 //   import config from "@reference-systems-lab/eslint-config";
 //   export default [...config, { languageOptions: { parserOptions: { tsconfigRootDir: import.meta.dirname } } }];
+// A Nuxt app imports "@reference-systems-lab/eslint-config/nuxt" instead (nuxt.js).
 import css from "@eslint/css";
 import js from "@eslint/js";
 import prettier from "eslint-config-prettier/flat";
@@ -32,7 +33,15 @@ const tokenColoursOnly = [
 const scoped = (configs) => configs.map((config) => ({ files: scripts, ...config }));
 
 export default [
-  { ignores: ["**/dist/**", "**/coverage/**", "**/.turbo/**"] },
+  {
+    ignores: [
+      "**/dist/**",
+      "**/coverage/**",
+      "**/.turbo/**",
+      "**/test-results/**",
+      "**/playwright-report/**",
+    ],
+  },
   ...scoped([
     js.configs.recommended,
     ...tseslint.configs.recommendedTypeChecked,
@@ -59,6 +68,8 @@ export default [
       ],
     },
   },
+  // Never render raw HTML (an XSS sink), and leave no console call in shipped code.
+  { files: scripts, rules: { "vue/no-v-html": "error", "no-console": "error" } },
   // Plain JavaScript (config files, scripts) isn't type-checked.
   { files: ["**/*.{js,mjs,cjs}"], ...tseslint.configs.disableTypeChecked },
   // Last for scripts: Prettier owns formatting, so the formatting rules above (Vue's template layout
