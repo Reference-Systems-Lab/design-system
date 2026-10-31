@@ -1,6 +1,6 @@
 {
   "name": "@reference-systems-lab/eslint-config",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "The shared ESLint flat config: typescript-eslint type-checked, Vue and accessibility rules, CSS with colours only from tokens, and a Nuxt variant",
   "license": "MIT",
   "repository": {
