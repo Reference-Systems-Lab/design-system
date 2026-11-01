@@ -5,6 +5,8 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  schedule:
+    - cron: "41 5 * * 1" # Weekly, so a new advisory fails the scan even when nothing changes
 
 permissions:
   contents: read
@@ -40,6 +42,32 @@ jobs:
 
       - name: Build, lint, type-check, test and check the packages
         run: npx turbo run build lint typecheck test check:package
+
+  vuln:
+    name: Vulnerabilities
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 26
+
+      - name: Install
+        run: npm ci --no-audit --no-fund
+
+      - name: Grype on every installed package at high, with no allowlist
+        uses: anchore/scan-action@27805bf3b4e84b4a5c980df22ed233c00390a439 # v7.4.2
+        with:
+          path: .
+          fail-build: true
+          severity-cutoff: high
+          output-format: table
 
   fixture:
     name: Consumer fixture
