@@ -1,0 +1,5 @@
+{
+  // The Vitest extension treats every vite.config.* as a test project. The consumer fixture is not
+  // one: it only gets its dependencies in the temporary copy scripts/fixture.sh makes.
+  "vitest.configSearchPatternExclude": "{**/node_modules/**,**/vendor/**,**/.*/**,**/*.d.ts,**/apps/consumer-fixture/**}"
+}
