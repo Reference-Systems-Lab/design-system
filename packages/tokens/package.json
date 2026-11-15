@@ -31,9 +31,9 @@
     "check:package": "publint --strict --pack npm && attw --pack . --profile esm-only --exclude-entrypoints ./tokens.css"
   },
   "devDependencies": {
-    "@terrazzo/cli": "2.9.0",
-    "@terrazzo/plugin-css": "2.9.0",
-    "@terrazzo/plugin-js": "2.9.0",
+    "@terrazzo/cli": "2.10.0",
+    "@terrazzo/plugin-css": "2.10.0",
+    "@terrazzo/plugin-js": "2.10.0",
     "vitest": "5.0.5"
   },
   "publishConfig": {
