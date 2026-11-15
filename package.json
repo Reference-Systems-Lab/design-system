@@ -35,6 +35,9 @@
     "turbo": "2.11.10",
     "typescript": "6.0.3"
   },
+  "overrides": {
+    "minimatch": "11.0.5"
+  },
   "allowScripts": {},
   "prettier": "@reference-systems-lab/prettier-config"
 }
