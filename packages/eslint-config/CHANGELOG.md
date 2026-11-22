@@ -1,5 +1,14 @@
 # @reference-systems-lab/eslint-config
 
+## 0.2.1
+
+### Patch Changes
+
+- 34b7d6f: Requires `eslint-plugin-vue` ^10.12.1, `typescript-eslint` ^8.72.2 and `vue-eslint-parser` ^10.4.2,
+  the current releases of the lint dependencies.
+- 742d6d6: Requires `eslint-plugin-vue` ^10.12.0, `eslint-plugin-vuejs-accessibility` ^2.6.3, `globals` ^17.14.0
+  and `typescript-eslint` ^8.72.1, the current releases of the lint dependencies.
+
 ## 0.2.0
 
 ### Minor Changes
