@@ -34,7 +34,7 @@
     "@terrazzo/cli": "2.10.0",
     "@terrazzo/plugin-css": "2.10.0",
     "@terrazzo/plugin-js": "2.10.0",
-    "vitest": "5.0.5"
+    "vitest": "5.1.0"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
